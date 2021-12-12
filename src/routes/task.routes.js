@@ -1,10 +1,14 @@
 const { Router } = require('express');
+const pool = require('../db');
 
 const router = Router();
 
 // Obtener todas las tareas
-router.get('/tasks', (req, res) => {
-   res.send('Reciving a list to task');
+router.get('/tasks', async(req, res) => {
+   const result = await pool.query('SELECT NOW();');
+   console.log(result);
+
+   res.json({result: result.rows[0]})
 });
 
 // obteneiendo una tarea
