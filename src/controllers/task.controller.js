@@ -4,8 +4,9 @@ const pool = require('../db');
 /*===================================================
    Obtener todas las tareas
  ====================================================*/
-const getAllTasks = async(req, res=response) => {   
+const getAllTasks = async(req, res=response, next) => {   
    try {
+      // throw new Error('Algo fue mal!!!') // lanzar un error propio
       const result = await pool.query('SELECT * FROM task');
       // console.log(result.rowCount);
 
@@ -22,7 +23,7 @@ const getAllTasks = async(req, res=response) => {
       })
 
    } catch (error) {
-      res.json({error: error})
+      next(error);
    } 
 }
 
@@ -30,7 +31,7 @@ const getAllTasks = async(req, res=response) => {
 /*===================================================
    Obtener una tarea
  ====================================================*/
-const getOneTask = async(req=request, res=response) => {
+const getOneTask = async(req=request, res=response, next) => {
    try {
       const {idTask} = req.params;
       // console.log(idTask);
@@ -44,7 +45,7 @@ const getOneTask = async(req=request, res=response) => {
       res.json(result.rows[0]);
       
    } catch (error) {
-      res.json({error: error})
+      next(error);
    }
 }
 
@@ -52,7 +53,7 @@ const getOneTask = async(req=request, res=response) => {
 /*===================================================
    Crear una tarea
  ====================================================*/
-const createTask = async(req=request, res=response) => {
+const createTask = async(req=request, res=response, next) => {
    const { title, description } = req.body;
    // console.log(title, description);
 
@@ -62,7 +63,7 @@ const createTask = async(req=request, res=response) => {
 
       res.json(result.rows[0]);
    } catch (error) {
-      res.json({error: error.message})
+      next(error);
    }
 }
 
@@ -70,7 +71,7 @@ const createTask = async(req=request, res=response) => {
 /*===================================================
    Eliminar una tarea
  ====================================================*/
-const deleteTask = async(req, res) => {
+const deleteTask = async(req, res=response, next) => {
    try {
       const { idTask } = req.params;
 
@@ -86,7 +87,7 @@ const deleteTask = async(req, res) => {
       const taskDelete = await pool.query('DELETE FROM task WHERE id = $1 RETURNING *', [idTask]);
       res.status(200).json(taskDelete.rows[0]);
    } catch (error) {
-      res.json({error: error.message});
+      next(error);
    }
 }
 
@@ -94,7 +95,7 @@ const deleteTask = async(req, res) => {
 /*===================================================
    Actualizar una tarea
  ====================================================*/
-const updateTask = async(req=request, res=response) => {
+const updateTask = async(req=request, res=response, next) => {
    try {
       const { idTask } = req.params;
       const { title, description } = req.body;
@@ -113,7 +114,7 @@ const updateTask = async(req=request, res=response) => {
       res.status(200).json(taskUpdate.rows[0])
 
    } catch (error) {
-      res.json({error: error.message});
+      next(error);
    }
 }
 
