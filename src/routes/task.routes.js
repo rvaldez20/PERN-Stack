@@ -20,7 +20,7 @@ router.get('/tasks/:idTask', getOneTask);
 router.post('/tasks', createTask);
 
 // Eliminando una tarea
-router.delete('/tasks', deleteTask);
+router.delete('/tasks/:idTask', deleteTask);
 
 // Actualizando una tarea
 router.put('/tasks', updateTask);

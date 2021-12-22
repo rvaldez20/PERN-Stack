@@ -36,7 +36,7 @@ const getOneTask = async(req=request, res=response) => {
       // console.log(idTask);
 
       // verificamos que existe
-      const result = await pool.query('SELECT *  FROM task WHERE id=$1', [idTask]);
+      const result = await pool.query('SELECT *  FROM task WHERE id = $1', [idTask]);
       if(result.rows.length === 0) {
          return res.status(404).json({ message: 'Task not found' });
       }
@@ -70,8 +70,22 @@ const createTask = async(req=request, res=response) => {
 /*===================================================
    Eliminar una tarea
  ====================================================*/
-const deleteTask = (req, res) => {
-   res.send('Deleting a list to task');
+const deleteTask = async(req, res) => {
+   try {
+      const { idTask } = req.params;
+
+      // primero validamos que exista task con el id
+      const result = await pool.query('SELECT * FROM task WHERE id = $1', [idTask]);
+
+      if(result.rows.length === 0){
+         return res.status(404).json({ message: 'Task not found' });
+      }
+
+      const taskDelete = await pool.query('DELETE FROM task WHERE id = $1 RETURNING *', [idTask]);
+      res.status(200).json( taskDelete.rows[0] );
+   } catch (error) {
+      res.json({error: error.message});
+   }
 }
 
 
