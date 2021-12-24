@@ -50,7 +50,6 @@ export default function TaskForm() {
             },
             body: JSON.stringify(task)
          })
-         // const data = await res.json();
          // console.log(data);         
       }
 
@@ -80,8 +79,7 @@ export default function TaskForm() {
    useEffect(() => {
       // console.log(params);
       if (params.id){
-         // console.log('FetchTask');
-         loadTask(params.id);         
+         loadTask(params.id);
       }
    }, [params.id])
 
